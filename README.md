@@ -1,20 +1,21 @@
 <h1>ExpNo 8 : Solve Cryptarithmetic Problem,a CSP(Constraint Satisfaction Problem) using Python</h1> 
-<h3>Name:               </h3>
-<h3>Register Number/Staff Id:       </h3>
+<h3>Name:  P.YOHALAKSHMI         </h3>
+<h3>Register Number: 212224060314    </h3>
 <H3>Aim:</H3>
 <p>
     To solve Cryptarithmetic Problem,a CSP(Constraint Satisfaction Problem) using Python
 </p>
 <h3>Procedure:</h3>
-Input and Output
-<br>Input:
+
+### Input and Output
+#### Input:
 This algorithm will take three words.
 <br> B A S E<br>
     B A L L<br>
            ----------<br>
            G A M E S<br>
 
-Output:
+#### Output:
 It will show which letter holds which number from 0 – 9.
 For this case it is like this.
 
@@ -22,7 +23,8 @@ For this case it is like this.
               B A L L                         2 4 5 5
              ---------                       ---------
             G A M E S                       0 4 9 1 6
-Algorithm
+            
+## Algorithm
 For this problem, we will define a node, which contains a letter and its corresponding values.<br>
 
 isValid(nodeList, count, word1, word2, word3)<br>
@@ -71,12 +73,74 @@ Begin<br>
       return true<br>
    return false<br>
 End<br>
+
+## PROGRAM
+```
+import itertools
+
+def solve_cryptarithmetic(addends, result, find_all=False, verbose=False):
+    words = addends + [result]
+    letters = []
+    for w in words:
+        for ch in w:
+            if ch not in letters:
+                letters.append(ch)
+
+    if len(letters) > 10:
+        raise ValueError("Too many letters. Max 10 allowed.")
+    leading = {w[0] for w in words}
+
+    def word_value(word, mapping):
+        val = 0
+        for c in word:
+            val = val * 10 + mapping[c]
+        return val
+    solutions = []
+
+    for perm in itertools.permutations(range(10), len(letters)):
+        mapping = dict(zip(letters, perm))
+        if any(mapping[ch] == 0 for ch in leading):
+            continue
+        add_sum = sum(word_value(w, mapping) for w in addends)
+        result_val = word_value(result, mapping)
+
+        if add_sum == result_val:
+            solutions.append(mapping.copy())
+            if not find_all:
+                return mapping
+
+    return solutions if find_all else (solutions[0] if solutions else None)
+
+if __name__ == "__main__":
+
+    addends = ["BASE", "BALL"]
+    result = "GAMES"
+
+    solution = solve_cryptarithmetic(addends, result)
+    if solution:
+        print("\nSolution Found:")
+        for k in sorted(solution):
+            print(f"{k} -> {solution[k]}")
+        def num(word):
+            return int("".join(str(solution[ch]) for ch in word))
+        print("\nCheck:")
+        print(f"{addends[0]} ({num(addends[0])})")
+        print(f"+ {addends[1]} ({num(addends[1])})")
+        print(f"= {result} ({num(result)})")
+
+    else:
+        print("No solution found.")
+```
 <hr>
 <h2>Sample Input and Output:</h2>
 SEND = 9567<br>
 MORE = 1085<br>
 <hr>
 MONEY = 10652<br>
+
+## OUTPUT
+<img width="453" height="452" alt="image" src="https://github.com/user-attachments/assets/46e8c529-c188-4ea7-8a80-f07e218b1aff" />
+
 <hr>
 <h2>Result:</h2>
 <p> Thus a Cryptarithmetic Problem was solved using Python successfully</p>
